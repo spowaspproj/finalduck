@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    
+<!--     CSRF Prevention Filter WHITELIST   
+    
+     
+<filter>
+    <filter-name>CSRFPreventionFilter</filter-name>
+    <filter-class>org.apache.catalina.filters.CsrfPreventionFilter</filter-class>
+
+    <init-param>
+        <param-name>entryPoints</param-name>
+        <param-value>ValidateLogin.java,/images/Banner.jpg,/images/bg.jpg,/search.jsp,/index.jsp,/style.css,/DisplayMessage.jsp,/Messages.jsp,/SendMessage.jsp,/documents.jsp,/members.jsp,/login.jsp,/logout.jsp,/members.jsp,/errorpage.jsp</param-value>
+   </init-param>
+</filter>
+
+<filter-mapping>
+    <filter-name>CSRFPreventionFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>  
+    
+     --> 
+    <context-param>
+        <param-name>Owasp.CsrfGuard.Config</param-name>
+        <param-value>/WEB-INF/csrfguard.properties</param-value>
+    </context-param>
+    <filter>
+        <filter-name>CSRFGuard</filter-name>
+        <filter-class>org.owasp.csrfguard.CsrfGuardFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CSRFGuard</filter-name>
+        <url-pattern>/SendMessage.do</url-pattern>
+    </filter-mapping>
+    <listener>
+        <listener-class>org.owasp.csrfguard.CsrfGuardServletContextListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.owasp.csrfguard.CsrfGuardHttpSessionListener</listener-class>
+    </listener>
+ 
+
+ 
+    <servlet>
+        <servlet-name>ValidateLogin</servlet-name>
+        <servlet-class>com.sittingducks.files.ValidateLogin</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SendMessage</servlet-name>
+        <servlet-class>com.sittingducks.files.SendMessage</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ValidateLogin</servlet-name>
+        <url-pattern>/ValidateLogin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SendMessage</servlet-name>
+        <url-pattern>/SendMessage.do</url-pattern>
+    </servlet-mapping>
+    
+    <session-config>
+        <cookie-config>
+            <http-only>true</http-only>
+        </cookie-config>
+
+      
+    </session-config>
+    <resource-ref>
+        <res-ref-name>jdbc/SittingDuck</res-ref-name>
+        <res-type>javax.sql.ConnectionPoolDataSource</res-type>
+        <res-auth>Container</res-auth>
+        <res-sharing-scope>Shareable</res-sharing-scope>
+    </resource-ref>
+    <listener>
+        <description>SessionListener</description> 
+        <listener-class>com.sittingducks.files.ApplicationSessionListener</listener-class>
+    </listener>
+  
+</web-app>
