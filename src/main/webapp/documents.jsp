@@ -18,26 +18,24 @@
 
 
 <%
-    
+
     AccessReferenceMap map = null;
-    
+
     //ESAPI.accessController().isAuthorizedForFile(yes);
-    
 // if the filesMap object has not been created, create it
     if (session.getAttribute("filesMap") == null) {
-        
+
         map = FilesMap.getFilesMap();
-        
+
         session.setAttribute("filesMap", map);
-        
-        
+
     } else {
         map = (AccessReferenceMap) session.getAttribute("filesMap");
     }
-    
-    %>
-    
-   
+
+%>
+
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -63,20 +61,57 @@
                 </div>
                 <br></br>
                 <div id="content">
-<% if(ValidateLogin.isLogin){
-    
-    %>
-                    <h1>Document Download</h1>
-                    <ul>
+                <% if (ValidateLogin.isLogin) {
+
+                %>
+                <h1>Document Download</h1>
+                <ul>
                     <li >
-                        <a href="downloadit.jsp?file=<%=map.getIndirectReference("ICB.pdf")%>"  >ICB.pdf</a> </li>
-                    <li><a href="downloadit.jsp?file=<%=map.getIndirectReference("06171162.pdf")%>"> ExampleDoc.pdf </a></li>
-                    </ul>
-                    <%
-                    }else{
-response.sendRedirect("errorpage.jsp?message=PLEASE LOGIN");
-}
-         %>           
+                        <a href="documents.jsp?file=<%=map.getIndirectReference("ICB.pdf")%>"  >ICB.pdf</a> </li>
+                    <li><a href="documents.jsp?file=<%=map.getIndirectReference("06171162.pdf")%>"> ExampleDoc.pdf </a></li>
+
+                    <!--${param.file}-->
+                </ul>
+                <%
+
+                        if (request.getParameter("file") != null) {
+
+                            String filePath;
+
+                            String context = request.getContextPath();
+
+                            int BUFSIZE = 4096;
+
+                            filePath = request.getParameter("file");
+
+                            filePath = (String) map.getDirectReference(filePath);
+
+                            File file = new File(getServletContext().getRealPath("/") + context);
+                            file = new File(file.getParent() + "/documents/" + filePath);
+                            int length = 0;
+                            ServletOutputStream outStream = response.getOutputStream();
+                            response.setContentType("text/html");
+                            response.setContentLength((int) file.length());
+                            String fileName = (new File(filePath)).getName();
+                            response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+
+                            byte[] byteBuffer = new byte[BUFSIZE];
+                            DataInputStream in = new DataInputStream(new FileInputStream(file));
+
+                            while ((in != null) && ((length = in.read(byteBuffer)) != -1)) {
+                                outStream.write(byteBuffer, 0, length);
+                            }
+
+                            in.close();
+                            outStream.close();
+                        } else {
+
+                        }
+
+                    } else {
+                        response.sendRedirect("errorpage.jsp?message=PLEASE LOGIN");
+                    }
+                %>           
             </div>
             <div id="footer">
 
@@ -84,9 +119,6 @@ response.sendRedirect("errorpage.jsp?message=PLEASE LOGIN");
                 Copyright © 2005 | All Rights Reserved
 
             </div>
-
-
-
         </div>
 
     </body>

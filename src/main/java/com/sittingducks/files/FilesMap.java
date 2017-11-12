@@ -17,6 +17,8 @@ import org.owasp.esapi.reference.DefaultRandomizer;
  */
 public class FilesMap {
     
+  
+    
 public static AccessReferenceMap getFilesMap(){
     
 Set fileSet = new HashSet();

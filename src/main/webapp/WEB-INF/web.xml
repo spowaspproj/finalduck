@@ -62,8 +62,6 @@
         <cookie-config>
             <http-only>true</http-only>
         </cookie-config>
-
-      
     </session-config>
     <resource-ref>
         <res-ref-name>jdbc/SittingDuck</res-ref-name>
